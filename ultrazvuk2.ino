@@ -10,6 +10,7 @@ long odezva;
 long odezva2;
 long vzdalenost;
 long vzdalenost2; 
+int minimal;
 
 long currentTime = 0;
 long lastBeep = 0;
@@ -23,16 +24,13 @@ void setup() {
   pinMode(pEcho2, INPUT);
   
   Serial.begin(9600);
-  
 }
 
 void loop(){
   getDistance();
-  writeDistance();
   currentTime = millis();
     if(vzdalenost<100 || vzdalenost2<100){
       if(mod==0){
-        
         soundDistance();
       }else if (mod==1){
           
@@ -57,24 +55,26 @@ void getDistance(){
   digitalWrite(pTrig2, LOW);
 
   odezva2 = pulseIn(pEcho2, HIGH);
+  
   if((odezva / 58.31)<1500){
     vzdalenost = odezva / 58.31;
-    }
-  if((odezva / 58.31)<1500){
+  }
+  if((odezva2 / 58.31)<1500){
     vzdalenost2 = odezva2 / 58.31;
     }
 }
-void writeDistance(){
-  }
 void soundDistance(){
-  int minimal;
   if(vzdalenost > vzdalenost2){
-    minimal = vzdalenost2;
+    
+      minimal = vzdalenost2;
+   
    }else{
-    minimal = vzdalenost;
+     minimal = vzdalenost;
+       
     }
-  if((millis()-lastBeep)> vzdalenost*4 ){
-     tone(12, 440, 50);
+    Serial.println(minimal);
+  if((millis()-lastBeep)> minimal*3 ){
+     tone(12, 440, 10);
      lastBeep = millis();
     }
   
