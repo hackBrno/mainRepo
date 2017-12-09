@@ -39,6 +39,22 @@ void setup() {
 
 int value = 0;
 
+String getValue(String data, char separator, int index){
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void loop() {
   delay(5000);
   ++value;
@@ -67,13 +83,18 @@ void loop() {
                    "Content-Type: application/json\r\n" + 
                    "Connection: close\r\n\r\n");
       delay(500);
-
+      
+  String line;
   // Read all the lines of the reply from server and print them to Serial
   while(client.available()){
-    String line = client.readStringUntil('\r');
-    Serial.print(line);
+    line = client.readStringUntil('\r');
+    //Serial.print(line);
   }
+
+  String sub = getValue(line, '"', 7);
   
-  Serial.println();
+  Serial.println("toto: " + sub);
   Serial.println("closing connection");
 }
+
+
